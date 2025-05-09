@@ -7,7 +7,7 @@
     using Lek8LarBackend.Services.MathGames.LevelOne;
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/countgame")]
     public class CountGameController : ControllerBase
     {
         private static readonly Dictionary<Guid, CountGameSession> Sessions = new();

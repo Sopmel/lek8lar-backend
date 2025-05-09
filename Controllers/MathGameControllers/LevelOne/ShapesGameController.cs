@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Lek8LarBackend.Controllers.MathGames.LevelOne
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/shapegame")]
     public class ShapeGameController : ControllerBase
     {
         private static Dictionary<string, ShapeGameSession> sessions = new();
