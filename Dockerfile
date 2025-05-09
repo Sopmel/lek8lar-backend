@@ -4,7 +4,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet publish ./Lek8LarBackend.csproj -c Release -o /app/publish --no-build --no-restore
+RUN dotnet publish ./Lek8LarBackend.csproj -c Release -o /app/publish
 
 
 
