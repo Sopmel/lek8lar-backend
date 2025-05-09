@@ -71,7 +71,7 @@ if (app.Environment.IsDevelopment() || builder.Configuration["EnableSwaggerInPro
 app.UseCors("AllowFrontend");
 
 app.UseRouting();
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
