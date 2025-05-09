@@ -1,4 +1,3 @@
-
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Lek8LarBackend.Data;
@@ -8,10 +7,11 @@ using Lek8LarBackend.Services.MathGames.LevelOne;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Databas
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//  JWT-inställningar
+// JWT-inställningar
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "superhemlignyckelsomärmycketsäkerochlång123456"; // Minst 32 tecken!
 var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey));
 builder.Services.AddSingleton(key);
@@ -35,37 +35,33 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
-// Lägg till Swagger
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Lägg till CORS
+// CORS för Vercel frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
         policy
-            .WithOrigins("https://lek-lar-app.vercel.app/")
+            .WithOrigins("https://lek-lar-app.vercel.app")
             .AllowAnyHeader()
-            .AllowAnyMethod()
-    );
+            .AllowAnyMethod());
 });
 
-
-// Lägg till controllers
+// Controllers och services
 builder.Services.AddControllers();
 builder.Services.AddScoped<CountGameService>();
 builder.Services.AddScoped<ShapeGameService>();
 
+// Portinställning (Render)
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://*:{port}");
 
-
 var app = builder.Build();
 
-// Aktivera Swagger i utvecklingsläge
-if (app.Environment.IsDevelopment())
+// Aktivera Swagger även i produktion om satt i miljövariabel
+if (app.Environment.IsDevelopment() || builder.Configuration["EnableSwaggerInProd"] == "true")
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -75,11 +71,9 @@ app.UseRouting();
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
-// Aktivera autentisering och auktorisering
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Se till att controllers registreras
 app.MapControllers();
 
 app.Run();
