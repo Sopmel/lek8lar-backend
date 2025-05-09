@@ -44,9 +44,14 @@ builder.Services.AddSwaggerGen();
 // Lägg till CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AllowFrontend", policy =>
+        policy
+            .WithOrigins("https://lek-lar-app.vercel.app")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+    );
 });
+
 
 // Lägg till controllers
 builder.Services.AddControllers();
@@ -67,7 +72,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
 // Aktivera autentisering och auktorisering
