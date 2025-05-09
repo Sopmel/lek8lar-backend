@@ -60,15 +60,17 @@ builder.WebHost.UseUrls($"http://*:{port}");
 
 var app = builder.Build();
 
-// Aktivera Swagger även i produktion om satt i miljövariabel
+// Swagger även i produktion om miljövariabeln är satt
 if (app.Environment.IsDevelopment() || builder.Configuration["EnableSwaggerInProd"] == "true")
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseRouting();
+// Viktigt: CORS måste ligga före routing
 app.UseCors("AllowFrontend");
+
+app.UseRouting();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
