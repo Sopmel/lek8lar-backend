@@ -9,9 +9,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<!-- Du kan ta bort detta block helt om inget av dessa rader behövs -->
 		<None Include="Lek8LarBackend.sln" />
 		<None Include="Lek8LarBackend\Lek8LarBackend.csproj" />
-		<None Include="Tests\Lek8LarBackend.Tests\Lek8LarBackend.Tests.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -24,8 +24,6 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-
 	</ItemGroup>
 
 </Project>
