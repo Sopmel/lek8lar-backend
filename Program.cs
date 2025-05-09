@@ -67,11 +67,11 @@ if (app.Environment.IsDevelopment() || builder.Configuration["EnableSwaggerInPro
     app.UseSwaggerUI();
 }
 
-// Viktigt: CORS måste ligga före routing
-app.UseCors("AllowFrontend");
+app.UseRouting();               // Routing först
+app.UseCors("AllowFrontend");   // CORS direkt efter routing
 
-app.UseRouting();
-// app.UseHttpsRedirection();
+// Ta bort HTTPS-redirect för Render (Render använder http://)
+//// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
