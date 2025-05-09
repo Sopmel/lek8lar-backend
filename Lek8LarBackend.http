@@ -1,0 +1,6 @@
+@Lek8LarBackend_HostAddress = http://localhost:5225
+
+GET {{Lek8LarBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
