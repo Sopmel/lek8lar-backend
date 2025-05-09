@@ -46,8 +46,10 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("https://lek-lar-app.vercel.app")
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod()
+            .AllowCredentials()); // om du använder cookies eller auth header
 });
+
 
 // Controllers och services
 builder.Services.AddControllers();
