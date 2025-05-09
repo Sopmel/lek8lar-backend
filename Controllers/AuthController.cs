@@ -11,7 +11,8 @@ using System.Text;
 namespace Lek8LarBackend.Controllers
 {
     [ApiController]
-    [Route("auth")]
+    [Route("api/auth")]
+
     public class AuthController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
