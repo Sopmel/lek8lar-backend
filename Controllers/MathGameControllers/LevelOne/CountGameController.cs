@@ -1,11 +1,10 @@
-﻿namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
-{
-    using Microsoft.AspNetCore.Mvc;
-    using Lek8LarBackend.Models;
-    using Lek8LarBackend.Services;
-    using Lek8LarBackend.Models.MathGameModels.LevelOne;
-    using Lek8LarBackend.Services.MathGames.LevelOne;
+﻿using Microsoft.AspNetCore.Mvc;
+using Lek8LarBackend.Models;
+using Lek8LarBackend.Services.MathGames.LevelOne;
+using Lek8LarBackend.Models.MathGameModels.LevelOne;
 
+namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
+{
     [ApiController]
     [Route("api/countgame")]
     public class CountGameController : ControllerBase
@@ -46,14 +45,16 @@
         }
 
         [HttpPost("answer")]
-        public IActionResult SubmitAnswer([FromQuery] Guid sessionId, [FromBody] int answer)
+        public IActionResult SubmitAnswer([FromBody] CountGameAnswerRequest request)
         {
-            if (!Sessions.TryGetValue(sessionId, out var session)) return NotFound();
+            if (!Sessions.TryGetValue(request.SessionId, out var session)) return NotFound();
 
             var currentQ = session.Questions[session.CurrentQuestionNumber - 1];
 
-            if (answer == currentQ.CorrectAnswer)
-                session.StarsEarned += 1;
+            bool isCorrect = request.Answer == currentQ.CorrectAnswer;
+
+            if (isCorrect)
+                session.StarsEarned++;
 
             session.CurrentQuestionNumber++;
 
@@ -67,8 +68,13 @@
                 });
             }
 
-            return Ok(new { correct = answer == currentQ.CorrectAnswer });
+            return Ok(new { correct = isCorrect });
         }
     }
 
+    public class CountGameAnswerRequest
+    {
+        public Guid SessionId { get; set; }
+        public int Answer { get; set; }
+    }
 }
