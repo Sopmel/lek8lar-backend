@@ -12,7 +12,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // === JWT-inställningar ===
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "superhemlignyckelsomärmycketsäkerochlång123456"; // Minst 32 tecken!
+var jwtKey = builder.Configuration["jwtKey"] ?? "superhemlignyckelsomärmycketsäkerochlång123456";
+
 var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey));
 builder.Services.AddSingleton(key);
 
@@ -44,11 +45,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
         policy
-            .WithOrigins("https://lek-lar-app.vercel.app")
+            .WithOrigins("https://lek-lar-app.vercel.app") // exakt!
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials()); // endast om du använder cookies eller Authorization header
+            .AllowCredentials());
 });
+
 
 // === Tjänster och controllers ===
 builder.Services.AddControllers();
@@ -71,8 +73,11 @@ if (app.Environment.IsDevelopment() || builder.Configuration["EnableSwaggerInPro
 // === Middleware ===
 app.UseRouting();
 app.UseCors("AllowFrontend");
-// app.UseHttpsRedirection(); // Ta bort om du kör Render utan HTTPS
+// app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+
+
