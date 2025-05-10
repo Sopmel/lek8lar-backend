@@ -36,12 +36,27 @@ namespace Lek8LarBackend.Controllers.MathGames.LevelOne
             if (session.CurrentQuestionNumber > session.TotalQuestions)
                 return Ok(new { gameOver = true });
 
-            var question = _service.GenerateQuestion(session.SessionId);
-            question.SessionId = Guid.Parse(sessionId);
-            session.Questions.Add(question);
+            LevelOneShapeGame newQuestion;
+            int attempts = 0;
+            LevelOneShapeGame? previous = session.Questions.LastOrDefault();
+
+            do
+            {
+                newQuestion = _service.GenerateQuestion(session.SessionId);
+                attempts++;
+            }
+            while (
+                previous is not null &&
+                newQuestion.ShapeImageUrl == previous.ShapeImageUrl &&
+                newQuestion.CorrectAnswer == previous.CorrectAnswer &&
+                attempts < 10
+            );
+
+            newQuestion.SessionId = Guid.Parse(sessionId);
+            session.Questions.Add(newQuestion);
             session.CurrentQuestionNumber++;
 
-            return Ok(question);
+            return Ok(newQuestion);
         }
 
         [HttpPost("answer")]
@@ -64,7 +79,6 @@ namespace Lek8LarBackend.Controllers.MathGames.LevelOne
                 stars = session.StarsEarned,
                 levelCleared = session.StarsEarned == session.TotalQuestions
             });
-
         }
     }
 

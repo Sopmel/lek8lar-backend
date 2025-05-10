@@ -22,9 +22,27 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
                 PlayerId = playerId
             };
 
+            LevelOneCountGame? previousQuestion = null; 
+
             for (int i = 0; i < session.TotalQuestions; i++)
             {
-                session.Questions.Add(_service.GenerateQuestion(difficulty));
+                LevelOneCountGame newQuestion;
+                int attempts = 0;
+
+                do
+                {
+                    newQuestion = _service.GenerateQuestion(difficulty);
+                    attempts++;
+                }
+                while (
+                    previousQuestion is not null &&
+                    newQuestion.ObjectImageUrl == previousQuestion.ObjectImageUrl &&
+                    newQuestion.ObjectCount == previousQuestion.ObjectCount &&
+                    attempts < 10
+                );
+
+                session.Questions.Add(newQuestion);
+                previousQuestion = newQuestion;
             }
 
             Sessions[session.SessionId] = session;
@@ -50,7 +68,6 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
             if (!Sessions.TryGetValue(request.SessionId, out var session)) return NotFound();
 
             var currentQ = session.Questions[session.CurrentQuestionNumber - 1];
-
             bool isCorrect = request.Answer == currentQ.CorrectAnswer;
 
             if (isCorrect)
