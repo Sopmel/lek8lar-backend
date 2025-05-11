@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Lek8LarBackend.Controllers.MathGames.LevelOne
 {
     [ApiController]
-    [Route("api/shapegame")]
+    [Route("api/shapesgame")]
     public class ShapeGameController : ControllerBase
     {
         private static Dictionary<string, ShapeGameSession> sessions = new();
@@ -19,16 +19,16 @@ namespace Lek8LarBackend.Controllers.MathGames.LevelOne
         }
 
         [HttpPost("start")]
-        public IActionResult StartGame()
+        public IActionResult StartGame([FromQuery] int level = 1)
         {
             var session = new ShapeGameSession();
             sessions[session.SessionId.ToString()] = session;
 
-            return Ok(new { sessionId = session.SessionId });
+            return Ok(new { sessionId = session.SessionId, level });
         }
 
         [HttpGet("question")]
-        public IActionResult GetQuestion([FromQuery] string sessionId)
+        public IActionResult GetQuestion([FromQuery] string sessionId, [FromQuery] int level = 1)
         {
             if (!sessions.TryGetValue(sessionId, out var session))
                 return BadRequest("Ogiltigt sessions-ID");
@@ -42,7 +42,7 @@ namespace Lek8LarBackend.Controllers.MathGames.LevelOne
 
             do
             {
-                newQuestion = _service.GenerateQuestion(session.SessionId);
+                newQuestion = _service.GenerateQuestion(session.SessionId, level);
                 attempts++;
             }
             while (

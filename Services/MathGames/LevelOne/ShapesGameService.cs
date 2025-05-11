@@ -14,38 +14,38 @@ namespace Lek8LarBackend.Services.MathGames.LevelOne
         // 🧠 Spara sessions internt (eller ersätt med Dependency Injected sessionhantering om det finns)
         private static readonly Dictionary<Guid, ShapeGameSession> sessions = new();
 
-        public LevelOneShapeGame GenerateQuestion(Guid sessionId)
+        public LevelOneShapeGame GenerateQuestion(Guid sessionId, int level)
         {
-            int index = _random.Next(shapeNames.Length);
+            int maxShapes = Math.Min(level + 2, shapeNames.Length); 
+
+            int index = _random.Next(maxShapes);
             string correctShape = shapeNames[index];
             string image = shapeImages[index];
 
             var options = new List<string> { correctShape };
             while (options.Count < 3)
             {
-                var option = shapeNames[_random.Next(shapeNames.Length)];
+                var option = shapeNames[_random.Next(maxShapes)];
                 if (!options.Contains(option)) options.Add(option);
             }
 
             options = options.OrderBy(_ => _random.Next()).ToList();
 
-            // Emoji-representationer för varje form
-            var shapeEmojis = new Dictionary<string, string>
-    {
-        { "Cirkel", "⚪" },
-        { "Kvadrat", "🟥" },
-        { "Triangel", "🔺" },
-        { "Rektangel", "▭" },
-        { "Stjärna", "⭐" },
-        { "Hjärta", "❤️" }
-    };
+            var shapeEmojis = new Dictionary<string, string>()
+{
+    { "Cirkel", "⚪" },
+    { "Kvadrat", "🟥" },
+    { "Triangel", "🔺" },
+    { "Rektangel", "▭" },
+    { "Stjärna", "⭐" },
+    { "Hjärta", "❤️" }
+};
 
-            // Kombinera emoji + namn i svarsalternativen
+
             var visualOptions = options
                 .Select(shape => $"{shapeEmojis[shape]} {shape}")
                 .ToList();
 
-            // Spara korrekt svar i session (utan emoji)
             if (!sessions.ContainsKey(sessionId))
             {
                 sessions[sessionId] = new ShapeGameSession();
@@ -57,12 +57,13 @@ namespace Lek8LarBackend.Services.MathGames.LevelOne
             {
                 Id = _random.Next(1000),
                 ShapeImageUrl = image,
-                CorrectAnswer = $"{shapeEmojis[correctShape]} {correctShape}", // även rätt svar matchar alternativen
+                CorrectAnswer = $"{shapeEmojis[correctShape]} {correctShape}",
                 Options = visualOptions,
                 GameOver = false,
                 SessionId = sessionId
             };
         }
+
 
         public bool CheckAnswer(string answerWithEmoji, Guid sessionId)
         {
