@@ -6,22 +6,26 @@ namespace Lek8LarBackend.Services.MathGames.LevelOne
     {
         private readonly Random _random = new();
 
-        public LevelOneCountGame GenerateQuestion(string difficulty)
+        public LevelOneCountGame GenerateQuestion(int level)
         {
-            int count = difficulty switch
+            int maxCount = level switch
             {
-                "easy" => _random.Next(1, 6),
-                _ => 1
+                1 => 5,
+                2 => 8,
+                3 => 10,
+                _ => 5
             };
 
+            int count = _random.Next(1, maxCount + 1);
             var correct = count;
+
             var options = new List<int> { correct };
             var imageOptions = new[] { "apple.png", "banana.png", "ball.png" };
             string chosenImage = imageOptions[_random.Next(imageOptions.Length)];
 
             while (options.Count < 3)
             {
-                int opt = _random.Next(1, 11);
+                int opt = _random.Next(1, maxCount + 1);
                 if (!options.Contains(opt)) options.Add(opt);
             }
 
@@ -36,6 +40,7 @@ namespace Lek8LarBackend.Services.MathGames.LevelOne
                 CorrectAnswer = correct
             };
         }
+
     }
 
 }

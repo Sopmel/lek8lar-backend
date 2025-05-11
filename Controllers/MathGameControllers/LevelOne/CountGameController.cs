@@ -13,16 +13,17 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
         private readonly CountGameService _service = new();
 
         [HttpPost("start")]
-        public IActionResult StartGame([FromQuery] string difficulty = "easy")
+        public IActionResult StartGame([FromQuery] int level = 1)
         {
             var playerId = User.Identity?.Name ?? "guest";
 
             var session = new CountGameSession
             {
-                PlayerId = playerId
+                PlayerId = playerId,
+                Level = level
             };
 
-            LevelOneCountGame? previousQuestion = null; 
+            LevelOneCountGame? previousQuestion = null;
 
             for (int i = 0; i < session.TotalQuestions; i++)
             {
@@ -31,7 +32,7 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
 
                 do
                 {
-                    newQuestion = _service.GenerateQuestion(difficulty);
+                    newQuestion = _service.GenerateQuestion(level);
                     attempts++;
                 }
                 while (
@@ -50,13 +51,21 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
             return Ok(new { sessionId = session.SessionId });
         }
 
+
         [HttpGet("question")]
         public IActionResult GetQuestion([FromQuery] Guid sessionId)
         {
             if (!Sessions.TryGetValue(sessionId, out var session)) return NotFound();
 
             if (session.CurrentQuestionNumber > session.TotalQuestions)
-                return Ok(new { gameOver = true, stars = session.StarsEarned });
+            {
+                return Ok(new
+                {
+                    gameOver = true,
+                    stars = session.StarsEarned,
+                    level = session.Level
+                });
+            }
 
             var question = session.Questions[session.CurrentQuestionNumber - 1];
             return Ok(question);
@@ -81,17 +90,19 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
                 {
                     gameOver = true,
                     stars = session.StarsEarned,
+                    level = session.Level, // 👈 nytt!
                     levelCleared = session.LevelCleared
                 });
             }
 
             return Ok(new { correct = isCorrect });
         }
-    }
 
-    public class CountGameAnswerRequest
-    {
-        public Guid SessionId { get; set; }
-        public int Answer { get; set; }
+
+        public class CountGameAnswerRequest
+        {
+            public Guid SessionId { get; set; }
+            public int Answer { get; set; }
+        }
     }
 }
