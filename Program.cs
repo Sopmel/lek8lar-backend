@@ -45,7 +45,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
         policy
-            .WithOrigins("https://lek-lar-app.vercel.app") // exakt!
+            .WithOrigins("https://lek-lar-app.vercel.app", "http://localhost:5173") 
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
