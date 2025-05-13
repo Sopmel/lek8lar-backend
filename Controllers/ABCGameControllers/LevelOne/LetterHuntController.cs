@@ -1,33 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Lek8LarBackend.Models;
-using Lek8LarBackend.Services.MathGames.LevelOne;
-using Lek8LarBackend.Models.MathGameModels.LevelOne;
+using Microsoft.AspNetCore.Mvc;
+using Lek8LarBackend.Models.LetterHuntModels.LevelOne;
+using Lek8LarBackend.Services.LetterHunt.LevelOne;
 
-namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
+namespace Lek8LarBackend.Controllers.LetterHuntControllers.LevelOne
 {
     [ApiController]
-    [Route("api/countgame")]
-    public class CountGameController : ControllerBase
+    [Route("api/letterhunt")]
+    public class LetterHuntController : ControllerBase
     {
-        private static readonly Dictionary<Guid, CountGameSession> Sessions = new();
-        private readonly CountGameService _service = new();
+        private static readonly Dictionary<Guid, LetterHuntSession> Sessions = new();
+        private readonly LetterHuntService _service = new();
 
         [HttpPost("start")]
         public IActionResult StartGame([FromQuery] int level = 1)
         {
             var playerId = User.Identity?.Name ?? "guest";
 
-            var session = new CountGameSession
+            var session = new LetterHuntSession
             {
                 PlayerId = playerId,
                 Level = level
             };
 
-            LevelOneCountGame? previousQuestion = null;
+            LevelOneLetterHuntGame? previousQuestion = null;
 
             for (int i = 0; i < session.TotalQuestions; i++)
             {
-                LevelOneCountGame newQuestion;
+                LevelOneLetterHuntGame newQuestion;
                 int attempts = 0;
 
                 do
@@ -37,8 +36,8 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
                 }
                 while (
                     previousQuestion is not null &&
-                    newQuestion.ObjectImageUrl == previousQuestion.ObjectImageUrl &&
-                    newQuestion.ObjectCount == previousQuestion.ObjectCount &&
+                    newQuestion.ImageUrl == previousQuestion.ImageUrl &&
+                    newQuestion.CorrectLetter == previousQuestion.CorrectLetter &&
                     attempts < 10
                 );
 
@@ -50,7 +49,6 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
 
             return Ok(new { sessionId = session.SessionId });
         }
-
 
         [HttpGet("question")]
         public IActionResult GetQuestion([FromQuery] Guid sessionId)
@@ -72,12 +70,12 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
         }
 
         [HttpPost("answer")]
-        public IActionResult SubmitAnswer([FromBody] CountGameAnswerRequest request)
+        public IActionResult SubmitAnswer([FromBody] LetterHuntAnswerRequest request)
         {
             if (!Sessions.TryGetValue(request.SessionId, out var session)) return NotFound();
 
             var currentQ = session.Questions[session.CurrentQuestionNumber - 1];
-            bool isCorrect = request.Answer == currentQ.CorrectAnswer;
+            bool isCorrect = request.Answer == currentQ.CorrectLetter;
 
             if (isCorrect)
                 session.StarsEarned++;
@@ -98,11 +96,10 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
             return Ok(new { correct = isCorrect });
         }
 
-
-        public class CountGameAnswerRequest
+        public class LetterHuntAnswerRequest
         {
             public Guid SessionId { get; set; }
-            public int Answer { get; set; }
+            public string Answer { get; set; } = "";
         }
     }
 }
