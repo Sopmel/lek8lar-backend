@@ -4,6 +4,8 @@ using Lek8LarBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Lek8LarBackend.Services.MathGames.LevelOne;
+using Lek8LarBackend.Data.Entities;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Lek8LarBackend.Models;
+using Lek8LarBackend.Data.Entities;
+
 
 namespace Lek8LarBackend.Data
 {
@@ -10,5 +12,8 @@ namespace Lek8LarBackend.Data
         public ApplicationDbContext() { }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<MemoryGameProgressEntity> MemoryGameProgress { get; set; } = null!;
+
     }
 }
