@@ -14,4 +14,5 @@ public class GameResult
     public int Stars { get; set; }
     public int Level { get; set; }
     public bool LevelCleared { get; set; }
+    public bool Correct { get; set; }
 }

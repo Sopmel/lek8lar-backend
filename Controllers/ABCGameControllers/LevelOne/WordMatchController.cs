@@ -83,6 +83,7 @@ namespace Lek8LarBackend.Controllers.WordMatchControllers.LevelOne
                 return Ok(new
                 {
                     gameOver = true,
+                    correct = isCorrect,
                     stars = session.StarsEarned,
                     level = session.Level,
                     levelCleared = session.LevelCleared

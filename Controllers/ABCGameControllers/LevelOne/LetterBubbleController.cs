@@ -98,7 +98,8 @@ public class LetterBubbleController : ControllerBase
             GameOver = isGameOver,
             Stars = session.StarsEarned,
             Level = session.Level,
-            LevelCleared = isGameOver
+            LevelCleared = isGameOver,
+            Correct = isCorrect
         };
 
         return Ok(question);

@@ -88,6 +88,7 @@ namespace Lek8LarBackend.Controllers.LetterHuntControllers.LevelOne
                 {
                     gameOver = true,
                     stars = session.StarsEarned,
+                    correct = isCorrect,
                     level = session.Level,
                     levelCleared = session.LevelCleared
                 });
