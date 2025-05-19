@@ -52,22 +52,5 @@ namespace Lek8LarBackend.Controllers.MemoryGameControllers.LevelOne
             return Ok(deck);
         }
 
-        [HttpPost("progress")]
-        public async Task<IActionResult> SubmitProgress([FromBody] MemoryGameProgressDto progress)
-        {
-            var playerId = User.Identity?.Name ?? "guest";
-
-            var entity = new MemoryGameProgressEntity
-            {
-                PlayerId = playerId,
-                Level = progress.Level,
-                Stars = progress.Stars
-            };
-
-            _db.MemoryGameProgress.Add(entity);
-            await _db.SaveChangesAsync();
-
-            return Ok();
-        }
     }
 }

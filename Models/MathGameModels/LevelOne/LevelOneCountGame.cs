@@ -10,3 +10,14 @@
     }
 
 }
+
+namespace Lek8LarBackend.Models.MathGameModels.LevelOne
+{
+    public class CountGameProgressDto
+    {
+        public int Level { get; set; }
+        public int Stars { get; set; }
+        public bool GameOver { get; set; }
+        public bool LevelCleared { get; set; }
+    }
+}

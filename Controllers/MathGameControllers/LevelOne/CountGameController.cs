@@ -2,6 +2,8 @@
 using Lek8LarBackend.Models;
 using Lek8LarBackend.Services.MathGames.LevelOne;
 using Lek8LarBackend.Models.MathGameModels.LevelOne;
+using Lek8LarBackend.Data;
+using Lek8LarBackend.Data.Entities;
 
 namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
 {
@@ -10,6 +12,12 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
     public class CountGameController : ControllerBase
     {
         private static readonly Dictionary<Guid, CountGameSession> Sessions = new();
+        private readonly ApplicationDbContext _db;
+
+        public CountGameController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
         private readonly CountGameService _service = new();
 
         [HttpPost("start")]
@@ -97,8 +105,6 @@ namespace Lek8LarBackend.Controllers.MathGameControllers.LevelOne
 
             return Ok(new { correct = isCorrect });
         }
-
-
         public class CountGameAnswerRequest
         {
             public Guid SessionId { get; set; }

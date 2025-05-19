@@ -1,4 +1,4 @@
-﻿namespace Lek8LarBackend.Services
+﻿namespace Lek8LarBackend.Services.MemoryGames
 {
     public class MemoryGameService
     {

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Lek8LarBackend.Services.MathGames.LevelOne;
 using Lek8LarBackend.Data.Entities;
+using Lek8LarBackend.Services.MemoryGames;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +59,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<CountGameService>();
 builder.Services.AddScoped<ShapeGameService>();
+builder.Services.AddScoped<PlusGameService>();
+builder.Services.AddScoped<MemoryGameService>();
+builder.Services.AddScoped<WhatsMissingService>();
+
 
 // === Portinställning för Render ===
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
