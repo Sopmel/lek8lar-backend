@@ -62,6 +62,8 @@ builder.Services.AddScoped<ShapeGameService>();
 builder.Services.AddScoped<PlusGameService>();
 builder.Services.AddScoped<MemoryGameService>();
 builder.Services.AddScoped<WhatsMissingService>();
+builder.Services.AddScoped<ColorMixGameService>();
+
 
 
 // === Portinställning för Render ===
